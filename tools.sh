@@ -5,7 +5,6 @@ Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[信息]${Font_color_suffix}"
 Error="${Red_font_prefix}[错误]${Font_color_suffix}"
 Tip="${Green_font_prefix}[注意]${Font_color_suffix}"
-
 copyright(){
     clear
 echo "\
@@ -53,7 +52,7 @@ net.ipv4.tcp_rmem=4096 87380 33554432
 net.ipv4.tcp_wmem=4096 16384 33554432
 net.ipv4.udp_rmem_min=8192
 net.ipv4.udp_wmem_min=8192
-net.core.default_qdisc=fq_codel
+net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 EOF
 sysctl -p && sysctl --system
