@@ -10,13 +10,13 @@ copyright(){
 echo "\
 ############################################################
 
-Linux网络优化脚本
-Powered by NNC.SH
+Linux网络优化脚本 
 
 ############################################################
 "
 }
 tcp_tune(){ # 优化TCP窗口
+sed -i '/net.ipv4.tcp_no_metrics_save/d' /etc/sysctl.conf
 sed -i '/net.ipv4.tcp_no_metrics_save/d' /etc/sysctl.conf
 sed -i '/net.ipv4.tcp_ecn/d' /etc/sysctl.conf
 sed -i '/net.ipv4.tcp_frto/d' /etc/sysctl.conf
@@ -40,19 +40,19 @@ net.ipv4.tcp_no_metrics_save=1
 net.ipv4.tcp_ecn=0
 net.ipv4.tcp_frto=0
 net.ipv4.tcp_mtu_probing=0
-net.ipv4.tcp_rfc1337=0
+net.ipv4.tcp_rfc1337=1
 net.ipv4.tcp_sack=1
 net.ipv4.tcp_fack=1
-net.ipv4.tcp_window_scaling=1
-net.ipv4.tcp_adv_win_scale=1
+net.ipv4.tcp_window_scaling=2
+net.ipv4.tcp_adv_win_scale=2
 net.ipv4.tcp_moderate_rcvbuf=1
-net.core.rmem_max=33554432
-net.core.wmem_max=33554432
-net.ipv4.tcp_rmem=4096 87380 33554432
-net.ipv4.tcp_wmem=4096 16384 33554432
+net.ipv4.tcp_rmem=4096 65536 37331520
+net.ipv4.tcp_wmem=4096 65536 37331520
+net.core.rmem_max=37331520
+net.core.wmem_max=37331520
 net.ipv4.udp_rmem_min=8192
 net.ipv4.udp_wmem_min=8192
-net.core.default_qdisc=fq
+net.core.default_qdisc=fq_codel
 net.ipv4.tcp_congestion_control=bbr
 EOF
 sysctl -p && sysctl --system
@@ -90,11 +90,6 @@ sysctl -p && sysctl --system
 ulimit_tune(){
 
 echo "1000000" > /proc/sys/fs/file-max
-sed -i '/fs.file-max/d' /etc/sysctl.conf
-cat >> '/etc/sysctl.conf' << EOF
-fs.file-max=1000000
-EOF
-
 ulimit -SHn 1000000 && ulimit -c unlimited
 echo "root     soft   nofile    1000000
 root     hard   nofile    1000000
@@ -256,7 +251,7 @@ get_system_info
 echo -e "当前系统信息: ${Font_color_suffix}$opsy ${Green_font_prefix}$virtual${Font_color_suffix} $arch ${Green_font_prefix}$kern${Font_color_suffix}
 "
 
-  read -p "请输入数字: " num
+  read -p "请输入数字 :" num
   case "$num" in
   0)
     Update_Shell
